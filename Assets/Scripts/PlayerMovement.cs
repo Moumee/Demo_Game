@@ -1,21 +1,30 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 
+
 public class PlayerMovement : MonoBehaviour
 {
+    public TrailRenderer trailRenderer;
     PlayerControls playerControls;
     InputAction move;
-    
+    float dashTimer = 0f;
+    float dashCooldown = 1.5f;
+    float dashForce = 20f;
     Rigidbody rb;
+    bool isDashing = false;
+    float dashDuration = 0.25f;
     public float moveForce = 1f;
     public float jumpForce = 10f;
     public float gravityScale = 4f;
     Vector3 forceDirection = Vector3.zero;
-    float maxSpeed = 5f;
+    float maxSpeed = 6f;
+
+    public AudioSource dashSound;
 
     public CinemachineFreeLook freelookCam;
     public Camera cam;
@@ -24,7 +33,6 @@ public class PlayerMovement : MonoBehaviour
     
     void Awake()
     {
-        
         playerControls = new PlayerControls();
         rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
@@ -34,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnEnable()
     {
         playerControls.Player.Jump.started += DoJump;
+        playerControls.Player.Dash.started += DoDash;
         move = playerControls.Player.Move;
         playerControls.Enable();
     }
@@ -41,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnDisable()
     {
         playerControls.Player.Jump.started -= DoJump;
+        playerControls.Player.Dash.started -= DoDash;
         playerControls.Player.Disable();
 
     }
@@ -53,29 +63,59 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    void DoDash(InputAction.CallbackContext context)
+    {
+        if (dashTimer > 0) return;
+        else dashTimer = dashCooldown;
+        isDashing = true;
+        dashSound.Play();
+        rb.AddForce(rb.transform.forward * dashForce, ForceMode.Impulse);
+        trailRenderer.enabled = true;
+        Invoke(nameof(ResetDash), dashDuration);
+
+    }
+
+    void ResetDash()
+    {
+        isDashing = false;
+        trailRenderer.enabled = false;
+    }
+    
+
+
     public bool IsGrounded()
     {
         return Physics.CheckSphere(groundCheck.position, 0.1f, groundLayer);
     }
-
+    
     void FixedUpdate()
     {
-        forceDirection += move.ReadValue<Vector2>().x * GetCameraRight(cam) * moveForce;
-        forceDirection += move.ReadValue<Vector2>().y * GetCameraForward(cam) * moveForce;
-
-        rb.AddForce(forceDirection, ForceMode.Impulse);
-        forceDirection = Vector3.zero;
-
-        if (rb.velocity.y < 0f)
+        if (dashTimer > 0)
         {
-            rb.velocity -= Vector3.down * Physics.gravity.y * Time.fixedDeltaTime;
+            dashTimer -= Time.fixedDeltaTime;
         }
 
-        Vector3 horizontalVelocity = rb.velocity;
-        horizontalVelocity.y = 0f;
-        if (horizontalVelocity.sqrMagnitude > maxSpeed * maxSpeed)
+        if (!isDashing)
         {
-            rb.velocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.velocity.y;
+            forceDirection += move.ReadValue<Vector2>().x * GetCameraRight(cam) * moveForce;
+            forceDirection += move.ReadValue<Vector2>().y * GetCameraForward(cam) * moveForce;
+            rb.AddForce(forceDirection, ForceMode.Impulse);
+            forceDirection = Vector3.zero;
+
+
+
+            if (rb.velocity.y < 0f)
+            {
+                rb.velocity -= Vector3.down * Physics.gravity.y * Time.fixedDeltaTime;
+            }
+
+            Vector3 horizontalVelocity = rb.velocity;
+            horizontalVelocity.y = 0f;
+            if (horizontalVelocity.sqrMagnitude > maxSpeed * maxSpeed)
+            {
+                rb.velocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.velocity.y;
+            }
+
         }
 
         LookAt();

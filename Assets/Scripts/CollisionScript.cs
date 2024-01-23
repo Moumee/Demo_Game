@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CollisionScript : MonoBehaviour
 {
+
+    public float timeToResetBones;
     public CinemachineFreeLook freelookCam;
     private Animator animator;
     private Collider mainCollider;
@@ -13,7 +15,11 @@ public class CollisionScript : MonoBehaviour
     private Collider[] ragdollColliders;
     private Transform hipsBonePos;
     Rigidbody rb;
-    public float collisionForce = 100f;
+    public AudioSource hitSound;
+    public float collisionForce = 60f;
+    bool enemyHit = false;
+
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -24,12 +30,24 @@ public class CollisionScript : MonoBehaviour
         ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
         ragdollColliders = GetComponentsInChildren<Collider>();
         rb = GetComponent<Rigidbody>();
+
         DisableRagdoll();
+
+
     }
 
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.collider.CompareTag("Ground"))
+        {
+            if (enemyHit)
+            {
+                enemyHit = false;
+                Invoke("DisableRagdoll", 3f);
+                
+            }
+        }
         if (collision.collider.CompareTag("Enemy"))
         {
             EnableRagdoll();
@@ -38,9 +56,9 @@ public class CollisionScript : MonoBehaviour
             foreach (var ragdollRb in ragdollRigidbodies)
             {
                 ragdollRb.AddForce(new Vector3(0, 1, -2).normalized * collisionForce, ForceMode.Impulse);
-                Invoke("DisableRagdoll", 3f);
             }
-            
+            hitSound.Play();
+            enemyHit = true;
         }
         
     }
@@ -60,7 +78,7 @@ public class CollisionScript : MonoBehaviour
         mainRigidbody.isKinematic = true;
     }
 
-    void DisableRagdoll()
+    public void DisableRagdoll()
     {
         if (freelookCam.m_LookAt != gameObject.transform && freelookCam.m_Follow != gameObject.transform)
         {
@@ -92,4 +110,8 @@ public class CollisionScript : MonoBehaviour
         }
         hipsBonePos.position = originalHipsPos;
     }
+
+    
+
+    
 }

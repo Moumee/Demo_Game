@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
+    public AudioSource jumpSound;
     private Animator animator;
     private Rigidbody rb;
-    private float maxSpeed = 5f;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +19,11 @@ public class PlayerAnimation : MonoBehaviour
     {
         animator.SetFloat("YVelocity", rb.velocity.y);
         animator.SetBool("IsJumping", !FindFirstObjectByType<PlayerMovement>().IsGrounded());
-        animator.SetFloat("Speed", rb.velocity.magnitude / maxSpeed);
+        animator.SetFloat("Speed", rb.velocity.magnitude);
+    }
+
+    void PlayJumpSound()
+    {
+        jumpSound.Play();
     }
 }
