@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 1960318603879516208}
   - component: {fileID: 8912356560696305689}
   - component: {fileID: 5150758864211164850}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Platform
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94,7 +94,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1696771258057626985}
-  m_Material: {fileID: 13400000, guid: 596e6c84b01d0b84f9b548d77aac35fa, type: 2}
+  m_Material: {fileID: 13400000, guid: 578d352d8417d4c4b9dcadb24aa3aec9, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 7017907633787741642}
   m_Layer: 7
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

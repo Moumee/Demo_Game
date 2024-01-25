@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: edfc741d53c9e8a48bde892a74860563
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 209978
+  packageName: Mega Hyper Casual Obstacles Pack
+  packageVersion: 1.0.0
+  assetPath: Assets/Mega Hyper Casual Obstacles Pack/Script/TextureChanger.cs
+  uploadId: 485356

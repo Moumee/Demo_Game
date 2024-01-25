@@ -2,27 +2,30 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CollisionScript : MonoBehaviour
 {
-
-    public float timeToResetBones;
+    PlayerControls playerControls;
     public CinemachineFreeLook freelookCam;
     private Animator animator;
     private Collider mainCollider;
     private Rigidbody mainRigidbody;
-    private Rigidbody[] ragdollRigidbodies;
+    public Rigidbody[] ragdollRigidbodies;
     private Collider[] ragdollColliders;
     private Transform hipsBonePos;
     Rigidbody rb;
     public AudioSource hitSound;
-    public float collisionForce = 60f;
-    bool enemyHit = false;
+    public AudioSource hitEffectSound;
+    private float collisionForce = 200f;
+    public bool startMusicEnabled = false;
 
-    
+
+
     // Start is called before the first frame update
     void Start()
     {
+        playerControls = new PlayerControls();
         animator = GetComponent<Animator>();
         mainCollider = GetComponent<Collider>();
         mainRigidbody = GetComponent<Rigidbody>();
@@ -33,21 +36,18 @@ public class CollisionScript : MonoBehaviour
 
         DisableRagdoll();
 
-
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enable Start Music"))
+        {
+            startMusicEnabled = true;
+        }
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag("Ground"))
-        {
-            if (enemyHit)
-            {
-                enemyHit = false;
-                Invoke("DisableRagdoll", 3f);
-                
-            }
-        }
         if (collision.collider.CompareTag("Enemy"))
         {
             EnableRagdoll();
@@ -55,16 +55,19 @@ public class CollisionScript : MonoBehaviour
             freelookCam.m_Follow = hipsBonePos;
             foreach (var ragdollRb in ragdollRigidbodies)
             {
-                ragdollRb.AddForce(new Vector3(0, 1, -2).normalized * collisionForce, ForceMode.Impulse);
+                ragdollRb.AddForce(new Vector3(0, 1, -1).normalized * collisionForce, ForceMode.Impulse);
             }
             hitSound.Play();
-            enemyHit = true;
+            hitEffectSound.Play();
         }
-        
+
     }
+
 
     void EnableRagdoll()
     {
+        FindFirstObjectByType<PlayerMovement>().playerControls.Disable();
+        animator.enabled = false;
         foreach (var ragdollRb in ragdollRigidbodies)
         {
             ragdollRb.isKinematic = false;
@@ -73,13 +76,13 @@ public class CollisionScript : MonoBehaviour
         {
             col.enabled = true;
         }
-        animator.enabled = false;
         mainCollider.enabled = false;
         mainRigidbody.isKinematic = true;
     }
 
     public void DisableRagdoll()
     {
+
         if (freelookCam.m_LookAt != gameObject.transform && freelookCam.m_Follow != gameObject.transform)
         {
             freelookCam.m_LookAt = gameObject.transform;
@@ -97,21 +100,24 @@ public class CollisionScript : MonoBehaviour
         mainCollider.enabled = true;
         mainRigidbody.isKinematic = false;
         AlignPosToHips();
+        FindFirstObjectByType<PlayerMovement>().playerControls.Enable();
+
     }
 
-    private void AlignPosToHips()
+    public void AlignPosToHips()
     {
         Vector3 originalHipsPos = hipsBonePos.position;
         transform.position = hipsBonePos.position;
-
-        if(Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo))
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo))
         {
             transform.position = new Vector3(transform.position.x, hitInfo.point.y, transform.position.z);
         }
         hipsBonePos.position = originalHipsPos;
     }
 
-    
 
-    
 }
+
+
+
+

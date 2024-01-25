@@ -10,16 +10,16 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     public TrailRenderer trailRenderer;
-    PlayerControls playerControls;
+    public PlayerControls playerControls;
     InputAction move;
     float dashTimer = 0f;
     float dashCooldown = 1.5f;
-    float dashForce = 20f;
+    float dashForce = 1000f;
     Rigidbody rb;
     bool isDashing = false;
     float dashDuration = 0.25f;
     public float moveForce = 1f;
-    public float jumpForce = 10f;
+    float jumpForce = 15f;
     public float gravityScale = 4f;
     Vector3 forceDirection = Vector3.zero;
     float maxSpeed = 6f;
@@ -65,13 +65,17 @@ public class PlayerMovement : MonoBehaviour
 
     void DoDash(InputAction.CallbackContext context)
     {
-        if (dashTimer > 0) return;
-        else dashTimer = dashCooldown;
-        isDashing = true;
-        dashSound.Play();
-        rb.AddForce(rb.transform.forward * dashForce, ForceMode.Impulse);
-        trailRenderer.enabled = true;
-        Invoke(nameof(ResetDash), dashDuration);
+        if (IsGrounded())
+        {
+            if (dashTimer > 0) return;
+            else dashTimer = dashCooldown;
+            isDashing = true;
+            dashSound.Play();
+            rb.AddForce(rb.transform.forward * dashForce);
+            trailRenderer.enabled = true;
+            Invoke(nameof(ResetDash), dashDuration);
+        }
+        
 
     }
 
@@ -152,4 +156,5 @@ public class PlayerMovement : MonoBehaviour
         }
         
     }
+
 }
