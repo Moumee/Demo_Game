@@ -9,6 +9,7 @@ TagManager:
   - Wall
   - Enable Start Music
   - Start Music
+  - Portal
   layers:
   - Default
   - TransparentFX

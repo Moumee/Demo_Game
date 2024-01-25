@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class CollisionScript : MonoBehaviour
 {
-    PlayerControls playerControls;
+    public bool isGameCleared = false;
+    public AudioSource gameClearSound;
+    public GameObject gameClearScreen;
     public CinemachineFreeLook freelookCam;
     private Animator animator;
     private Collider mainCollider;
@@ -25,7 +28,6 @@ public class CollisionScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerControls = new PlayerControls();
         animator = GetComponent<Animator>();
         mainCollider = GetComponent<Collider>();
         mainRigidbody = GetComponent<Rigidbody>();
@@ -44,11 +46,29 @@ public class CollisionScript : MonoBehaviour
         {
             startMusicEnabled = true;
         }
+
+        if (other.CompareTag("Portal"))
+        {
+            isGameCleared = true;
+            gameClearScreen.SetActive(true);
+            gameClearSound.Play();
+            FindFirstObjectByType<HeadGroundCheck>().backgroundMusic.Stop();
+            StartCoroutine(BackToMain());
+            FindFirstObjectByType<PlayerMovement>().playerControls.Disable();
+        }
+    }
+
+    IEnumerator BackToMain()
+    {
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene(0);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag("Enemy"))
+        if (!rb.isKinematic && collision.collider.CompareTag("Enemy"))
         {
             EnableRagdoll();
             freelookCam.m_LookAt = hipsBonePos;

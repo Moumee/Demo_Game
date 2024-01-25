@@ -5,16 +5,21 @@ using UnityEngine;
 
 public class HeadGroundCheck : MonoBehaviour
 {
+    Rigidbody body;
     public AudioSource backToStartMusic;
+    public AudioSource floorHitSound;
     CollisionScript collisionScript;
+    public AudioSource backgroundMusic;
     private void Start()
     {
+        body = GetComponent<Rigidbody>();
         collisionScript = FindFirstObjectByType<CollisionScript>();
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag("Ground"))
+        if (!body.isKinematic && collision.collider.CompareTag("Ground"))
         {
+            floorHitSound.Play();
             StartCoroutine(WaitDisableRagdoll());
         }
     }
@@ -23,13 +28,17 @@ public class HeadGroundCheck : MonoBehaviour
     {
         if (other.CompareTag("Start Music") && collisionScript.startMusicEnabled)
         {
+            backgroundMusic.Stop();
             backToStartMusic.Play();
+            backgroundMusic.PlayDelayed(backToStartMusic.clip.length);
             collisionScript.startMusicEnabled = false;
         }
     }
+
+    
     IEnumerator WaitDisableRagdoll()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         FindFirstObjectByType<CollisionScript>().DisableRagdoll();
     }
 
