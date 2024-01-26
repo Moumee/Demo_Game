@@ -67,6 +67,7 @@ public class CollisionScript : MonoBehaviour
     IEnumerator BackToMain()
     {
         yield return new WaitForSeconds(5f);
+        gameClearScreen.SetActive(false);
         SceneManager.LoadScene(0);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
