@@ -7,6 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     public void PlayButton()
     {
+        Time.timeScale = 1;
         SceneManager.LoadSceneAsync(2);
     }
     
