@@ -19,7 +19,6 @@ public class HeadGroundCheck : MonoBehaviour
     {
         if (!body.isKinematic && collision.collider.CompareTag("Ground"))
         {
-            FindFirstObjectByType<CollisionScript>().AlignPosToHips();
             floorHitSound.Play();
             StartCoroutine(WaitDisableRagdoll());
         }

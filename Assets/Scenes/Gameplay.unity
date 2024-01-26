@@ -1626,7 +1626,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 276798839}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.36188164, y: -0.00000003586698, z: 0.000000013923262, w: 0.9322241}
+  m_LocalRotation: {x: 0.36188164, y: 0.00000003586698, z: -0.000000013923264, w: 0.9322241}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5614,7 +5614,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2936171037619883159, guid: 350a3bb914965d24585ced71ecce08d7, type: 3}
       propertyPath: m_TagString
-      value: Ground
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 6464535955657026857, guid: 350a3bb914965d24585ced71ecce08d7, type: 3}
       propertyPath: m_Name
@@ -14981,8 +14981,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 362065241685821020, guid: 85497b0393c819b48a6448909298ea60, type: 3}
+      propertyPath: m_Interpolate
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 362065241685821020, guid: 85497b0393c819b48a6448909298ea60, type: 3}
       propertyPath: m_CollisionDetection
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 450502459928318167, guid: 85497b0393c819b48a6448909298ea60, type: 3}
       propertyPath: m_Name
@@ -15229,7 +15233,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2936171037619883159, guid: 350a3bb914965d24585ced71ecce08d7, type: 3}
       propertyPath: m_TagString
-      value: Ground
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 6464535955657026857, guid: 350a3bb914965d24585ced71ecce08d7, type: 3}
       propertyPath: m_Name
