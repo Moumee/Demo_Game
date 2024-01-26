@@ -40,6 +40,14 @@ public class CollisionScript : MonoBehaviour
 
     }
 
+    private void FixedUpdate()
+    {
+        if (rb.isKinematic)
+        {
+            AlignPosToHips();
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enable Start Music"))
