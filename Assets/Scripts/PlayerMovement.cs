@@ -43,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
     {
         playerControls.Player.Jump.started += DoJump;
         playerControls.Player.Dash.started += DoDash;
+        playerControls.Player.Pause.started += FindFirstObjectByType<PauseMenu>().DoPause;
         move = playerControls.Player.Move;
         playerControls.Enable();
     }
@@ -51,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
     {
         playerControls.Player.Jump.started -= DoJump;
         playerControls.Player.Dash.started -= DoDash;
+        playerControls.Player.Pause.started -= FindFirstObjectByType<PauseMenu>().DoPause;
         playerControls.Player.Disable();
 
     }

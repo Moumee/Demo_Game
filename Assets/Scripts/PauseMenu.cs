@@ -31,15 +31,13 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadSceneAsync(0);
     }
 
-    private void Update()
+    public void DoPause(InputAction.CallbackContext context)
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            pausePanel.SetActive(true);
-            Time.timeScale = 0;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
+        pausePanel.SetActive(true);
+        Time.timeScale = 0;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
     }
 
 
