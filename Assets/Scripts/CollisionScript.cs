@@ -102,7 +102,7 @@ public class CollisionScript : MonoBehaviour
 
     public void DisableRagdoll()
     {
-
+        AlignPosToHips();
         if (freelookCam.m_LookAt != gameObject.transform && freelookCam.m_Follow != gameObject.transform)
         {
             freelookCam.m_LookAt = gameObject.transform;
@@ -119,7 +119,7 @@ public class CollisionScript : MonoBehaviour
         animator.enabled = true;
         mainCollider.enabled = true;
         mainRigidbody.isKinematic = false;
-        AlignPosToHips();
+        
         FindFirstObjectByType<PlayerMovement>().playerControls.Enable();
 
     }
@@ -128,9 +128,9 @@ public class CollisionScript : MonoBehaviour
     {
         Vector3 originalHipsPos = hipsBonePos.position;
         transform.position = hipsBonePos.position;
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo))
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitinfo))
         {
-            transform.position = new Vector3(transform.position.x, hitInfo.point.y, transform.position.z);
+            transform.position = new Vector3(transform.position.x, hitinfo.point.y, transform.position.z);
         }
         hipsBonePos.position = originalHipsPos;
     }

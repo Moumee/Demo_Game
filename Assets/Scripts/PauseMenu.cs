@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -31,12 +30,16 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadSceneAsync(0);
     }
 
-    public void DoPause(InputAction.CallbackContext context)
+    private void Update()
     {
-        pausePanel.SetActive(true);
-        Time.timeScale = 0;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            pausePanel.SetActive(true);
+            Time.timeScale = 0;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        
 
     }
 
